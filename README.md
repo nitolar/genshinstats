@@ -1,29 +1,20 @@
 # genshinstats
-[![Downloads](https://pepy.tech/badge/genshinstats)](https://pepy.tech/project/genshinstats)
-[![Downloads/month](https://pepy.tech/badge/genshinstats/month)](https://pepy.tech/project/genshinstats)
-[![PyPI package](https://img.shields.io/pypi/v/genshinstats)](https://pypi.org/project/genshinstats/)
-[![Last Commit](https://img.shields.io/github/last-commit/thesadru/genshinstats)](https://github.com/thesadru/genshinstats/commits/master)
-[![Repo Size](https://img.shields.io/github/repo-size/thesadru/genshinstats)](https://github.com/thesadru/genshinstats/graphs/code-frequency)
-[![License](https://img.shields.io/github/license/thesadru/genshinstats)](https://github.com/thesadru/genshinstats/blob/master/LICENSE)
-[![Discord](https://img.shields.io/badge/chat-discord-0d86d7)](https://discord.gg/sMkSKRPuCR)
+[![Last Commit](https://img.shields.io/github/last-commit/nitolar/genshinstats)](https://github.com/nitolar/genshinstats/commits/master)
+[![Repo Size](https://img.shields.io/github/repo-size/nitolar/genshinstats)](https://github.com/nitolar/genshinstats/graphs/code-frequency)
+[![License](https://img.shields.io/github/license/nitolar/genshinstats)](https://github.com/nitolar/genshinstats/blob/master/LICENSE)
 
 Genshinstats is an unofficial wrapper for the Genshin Impact api. It supports getting user stats, wish history and automatic claiming of daily check-in rewards.
 
 # **Forked by nitolar play to still recive updates and new featchers**
 
 ## how to install
-using [pip](https://pypi.org/project/genshinstats/)
-```
-pip install genshinstats
-```
-### Alternatives:
 using pip from git
 ```
-pip install git+https://github.com/thesadru/genshinstats
+pip install git+https://github.com/nitolar/genshinstats
 ```
 clone and install manually
 ```
-git clone https://github.com/thesadru/genshinstats.git
+git clone https://github.com/nitolar/genshinstats.git
 cd genshinstats
 python setup.py install
 ```
@@ -490,6 +481,8 @@ wishes.py           wish history
 ```
 
 # CHANGELOG
+## 1.4.11.4
+- Added `remarkable_chests` to `stats` and `id` to `explorations` in `prettify_stats`
 ## 1.4.11.3
 - Added support for realm currency counter in `get_notes`
 ## 1.4.11.2
