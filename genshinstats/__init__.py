@@ -5,7 +5,7 @@ Majority of the endpoints are implemented, documented and typehinted.
 
 All endpoints require to be logged in with either a cookie or an authkey, read the README.md for more info.
 
-https://github.com/thesadru/genshinstats
+https://github.com/nitolar/genshinstats/
 """
 from .caching import *
 from .daily import *
