@@ -17,6 +17,15 @@ character_icons = {
     "Sara": "Kujou Sara",
     "Shougun": "Raiden Shogun",
     "Tohma": "Thoma",
+    "Heizo": "Shikanoin Heizou",
+    "Shinobu": "Kuki Shinobu",
+    "Yunjin": "Yun Jin",
+    "Itto": "Arataki Itto",
+    "Ayaka": "Kamisato Ayaka",
+    "Ayato": "Kamisato Ayato",
+    "Kokomi": "Sangonomiya Kokomi",
+    "Yae": "Yae Miko",
+    "Noel": "Noelle"
 }
 
 
@@ -31,9 +40,16 @@ def _recognize_character_icon(url: str) -> str:
 
 
 def prettify_stats(data):
+    r = data["role"]
     s = data["stats"]
     h = data["homes"][0] if data["homes"] else None
     return {
+        "info": {
+            "nick": r["nickname"],
+            "level": r["level"],
+            "region": r["region"],
+            "avatar_url": r["AvatarUrl"] # idk what is this for
+        },
         "stats": {
             "achievements": s["achievement_number"],
             "active_days": s["active_day_number"],
@@ -59,6 +75,7 @@ def prettify_stats(data):
                 "element": i["element"],
                 "level": i["level"],
                 "friendship": i["fetter"],
+                "constellation": i["actived_constellation_num"],
                 "icon": i["image"],
                 "id": i["id"],
             }
