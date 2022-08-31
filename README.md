@@ -481,6 +481,8 @@ wishes.py           wish history
 ```
 
 # CHANGELOG
+## 1.4.11.5
+- Added `dendroculus` to `stats` and `icon_dark` to `explorations` in `prettify_stats`
 ## 1.4.11.4
 - Added `remarkable_chests` to `stats` and `id` to `explorations` in `prettify_stats`
 ## 1.4.11.3

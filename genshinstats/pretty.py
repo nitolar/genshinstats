@@ -58,6 +58,7 @@ def prettify_stats(data):
             "anemoculi": s["anemoculus_number"],
             "geoculi": s["geoculus_number"],
             "electroculi": s["electroculus_number"],
+            "dendroculus": s["dendroculus_number"],
             "common_chests": s["common_chest_number"],
             "exquisite_chests": s["exquisite_chest_number"],
             "precious_chests": s["precious_chest_number"],
@@ -100,7 +101,8 @@ def prettify_stats(data):
                 "explored": round(i["exploration_percentage"] / 10, 1),
                 "type": i["type"],
                 "level": i["level"],
-                "icon": i["icon"],
+                "icon": i["icon"], # icon in white color
+                "icon_dark": i["inner_icon"], # icon in black color
                 "offerings": i["offerings"],
             }
             for i in data["world_explorations"]
