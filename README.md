@@ -5,7 +5,7 @@
 
 Genshinstats is an unofficial wrapper for the Genshin Impact api. It supports getting user stats, wish history and automatic claiming of daily check-in rewards.
 
-# **Forked by nitolar play to still recive updates and new featchers**
+# **Forked by nitolar play to still recive updates and new functions**
 
 ## how to install
 using pip from git
