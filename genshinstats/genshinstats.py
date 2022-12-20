@@ -21,6 +21,7 @@ from .pretty import (
     prettify_characters,
     prettify_notes,
     prettify_stats,
+    prettyify_tcg,
 )
 from .utils import USER_AGENT, is_chinese, recognize_server, retry
 
@@ -36,6 +37,7 @@ __all__ = [
     "get_spiral_abyss",
     "get_notes",
     "get_activities",
+    "get_tcg",
     "get_all_user_data",
 ]
 
@@ -328,7 +330,9 @@ def get_activities(
     return prettify_activities(data)
 
 
-def get_notes(uid: int, lang: str = "en-us", cookie: Mapping[str, Any] = None) -> Dict[str, Any]:
+def get_notes(
+    uid: int, lang: str = "en-us", cookie: Mapping[str, Any] = None
+) -> Dict[str, Any]:
     """Gets the real-time notes of the user
 
     Contains current resin, expeditions, daily commissions and similar.
@@ -343,6 +347,26 @@ def get_notes(uid: int, lang: str = "en-us", cookie: Mapping[str, Any] = None) -
     )
     return prettify_notes(data)
 
+def get_tcg(
+    uid: int, lang: str = "en-us", cookie: Mapping[str, Any] = None, characters: bool = True, action: bool = True
+) -> Dict[str, Any]:
+    """Gets the cards for Genius Invokation TCG that user UNLOCKED and basic user stats
+    
+    For every card contains basic info like id, name, description, image, wiki page and card proficiency.
+    
+    For characters contains info like hp, element, weapon and skills.
+    
+    For summons and events contains info about cost.
+    """
+    server = recognize_server(uid)
+    data = fetch_game_record_endpoint(
+        "genshin/api/gcg/cardList",
+        chinese=is_chinese(uid),
+        cookie=cookie,
+        params=dict(server=server, role_id=uid, need_avatar="true" if characters else "false", need_action="true" if action else "false", limit=265, need_stats="true",),
+        headers={"x-rpc-language": lang},
+    )
+    return prettyify_tcg(data)
 
 def get_all_user_data(
     uid: int, lang: str = "en-us", cookie: Mapping[str, Any] = None
@@ -354,4 +378,5 @@ def get_all_user_data(
     """
     data = get_user_stats(uid, equipment=True, lang=lang, cookie=cookie)
     data["spiral_abyss"] = [get_spiral_abyss(uid, previous, cookie) for previous in [False, True]]
+    data["tcg"] = get_tcg(uid, lang=lang, cookie=cookies)
     return data

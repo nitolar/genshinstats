@@ -481,6 +481,9 @@ wishes.py           wish history
 ```
 
 # CHANGELOG
+## 1.4.12
+- Fixed `get_authkey` not working
+- Added `get_tcg` which includes unlocked cards and basic info
 ## 1.4.11.5
 - Added `dendroculus` to `stats` and `icon_dark` to `explorations` in `prettify_stats`
 ## 1.4.11.4

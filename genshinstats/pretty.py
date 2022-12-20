@@ -3,7 +3,7 @@
 Fixes the huge problem of outdated field names in the api,
 that were leftover from during development
 """
-import re
+import re, json
 from datetime import datetime
 
 character_icons = {
@@ -26,6 +26,16 @@ character_icons = {
     "Kokomi": "Sangonomiya Kokomi",
     "Yae": "Yae Miko",
     "Noel": "Noelle"
+}
+
+elements = {
+    "Wind": "Anemo",
+    "Electric": "Electro",
+    "Water": "Hydro",
+    "Grass": "Dendro",
+    "Fire": "Pyro",
+    "Rock": "Geo",
+    "Ice": "Cyro"
 }
 
 
@@ -481,3 +491,79 @@ def prettify_trans(data, reasons={}):
             }
             for i in data
         ]
+
+def prettyify_tcg(data):
+    stats = data['stats']
+    data = data['card_list']
+    characters = list(filter(lambda x:x['card_type']=='CardTypeCharacter',data)) # Characters
+    equipment = list(filter(lambda x:x['card_type']=='CardTypeModify',data)) # Artefacts, weapons etc.
+    summons = list(filter(lambda x:x['card_type']=='CardTypeAssist',data)) # Summon Timmie, Liben etc.
+    event = list(filter(lambda x:x['card_type']=='CardTypeEvent',data)) # Get another card, switch character as fast action etc.
+    reg = r"([A-Z])\w+"
+    return {
+        "stats": {
+                "level": stats['level'],
+                "characters_unlocked": stats['avatar_card_num_gained'],
+                "actions_unlocked": stats['action_card_num_gained'],
+            },
+        "characters": [
+            {
+                "id": character['id'],
+                "name": character['name'],
+                "description": character['desc'],
+                "image": character['image'],
+                "hp": character['hp'],
+                "used": character['use_count'],
+                "card_proficiency": character['proficiency'],
+                "element": elements[re.search(reg, character['tags'][0])[0].replace("UI_Gcg_Tag_Element_", "")],
+                "weapon_type": re.search(reg, character['tags'][1])[0].replace("UI_Gcg_Tag_Weapon_", ""),
+                "skills": [
+                    {
+                        "name": i['name'],
+                        "description": i['desc'],
+                        "type": i['tag'] 
+                    } for i in character['card_skills']
+                ],
+                "wiki": character['card_wiki']
+            } for character in characters if character['num'] > 0
+        ],
+        "equipment": [
+            {
+                "id": modifier['id'],
+                "name": modifier['name'],
+                "description": modifier['desc'],
+                "image": modifier['image'],
+                "amount": modifier['num'],
+                "used": modifier['use_count'],
+                "card_proficiency": modifier['proficiency'],
+                "action_cost": None if modifier['action_cost'][0]['cost_value'] == 0 else f"{modifier['action_cost'][0]['cost_value']} {str(modifier['action_cost'][0]['cost_type']).replace('CostType', '').replace('Same', 'of the same type').replace('Void', 'of random type')}",
+                "wiki": modifier['card_wiki']
+            } for modifier in equipment if modifier['num'] > 0
+        ],
+        "summons": [
+            {
+                "id": assist['id'],
+                "name": assist['name'],
+                "description": assist['desc'],
+                "image": assist['image'],
+                "amount": assist['num'],
+                "used": assist['use_count'],
+                "card_proficiency": assist['proficiency'],
+                "action_cost": None if assist['action_cost'][0]['cost_value'] == 0 else f"{assist['action_cost'][0]['cost_value']} {str(assist['action_cost'][0]['cost_type']).replace('CostType', '').replace('Same', 'of the same type').replace('Void', 'of random type')}",
+                "wiki": assist['card_wiki']
+            } for assist in summons if assist['num'] > 0
+        ],
+        "event": [
+            {
+                "id": events['id'],
+                "name": events['name'],
+                "description": events['desc'],
+                "image": events['image'],
+                "amount": events['num'],
+                "used": events['use_count'],
+                "card_proficiency": events['proficiency'],
+                "action_cost": None if events['action_cost'][0]['cost_value'] == 0 else f"{events['action_cost'][0]['cost_value']} {str(events['action_cost'][0]['cost_type']).replace('CostType', '').replace('Same', 'of the same type').replace('Void', 'of random type')}",
+                "wiki": events['card_wiki']
+            } for events in event if events['num'] > 0
+        ]
+    }

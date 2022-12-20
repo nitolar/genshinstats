@@ -3,6 +3,7 @@ import inspect
 import os.path
 import re
 import warnings
+import pathlib
 from functools import wraps
 from typing import Callable, Iterable, Optional, Type, TypeVar, Union
 
@@ -14,7 +15,7 @@ __all__ = [
     "recognize_id",
     "is_game_uid",
     "is_chinese",
-    "get_logfile",
+    "get_datafile",
 ]
 
 T = TypeVar("T")
@@ -72,14 +73,41 @@ def is_chinese(x: Union[int, str]) -> bool:
     return str(x).startswith(("cn", "1", "5"))
 
 
-def get_logfile() -> Optional[str]:
-    """Find and return the Genshin Impact logfile. None if not found."""
-    mihoyo_dir = os.path.expanduser("~/AppData/LocalLow/miHoYo/")
-    for name in ["Genshin Impact", "原神", "YuanShen"]:
-        output_log = os.path.join(mihoyo_dir, name, "output_log.txt")
-        if os.path.isfile(output_log):
-            return output_log
-    return None  # no genshin installation
+def get_datafile(game_location: str = None) -> Optional[str]:
+    """Find a Genshin Impact datafile."""
+    # C:\Program Files\Genshin Impact\Genshin Impact game\GenshinImpact_Data
+    # C:\Program Files\Genshin Impact\Genshin Impact game\YuanShen_Data
+    if game_location:
+        game_location = pathlib.Path(game_location)
+        if game_location.is_file():
+            return game_location
+
+        for name in ("Genshin Impact game/GenshinImpact_Data", "Genshin Impact game/YuanShen_Data"):
+            data_location = game_location / name / "webCaches/Cache/Cache_Data/data_2"
+            if data_location.is_file():
+                return data_location
+
+        raise FileNotFoundError("No data file found in the provided game location.")
+
+    mihoyo_dir = pathlib.Path("~/AppData/LocalLow/miHoYo/").expanduser()
+
+    for name in ("Genshin Impact", "原神"):
+        output_log = mihoyo_dir / name / "output_log.txt"
+        if not output_log.is_file():
+            continue  # wrong language
+
+        logfile = output_log.read_text()
+        match = re.search(r"Warmup file (.+?_Data)", logfile, re.MULTILINE)
+        if match is None:
+            return None  # no genshin installation location in logfile
+
+        data_location = pathlib.Path(f"{match[1]}/webCaches/Cache/Cache_Data/data_2")
+        if data_location.is_file():
+            return data_location
+
+        return None  # data location is improper
+
+    return None  # no genshin datafile
 
 
 def retry(

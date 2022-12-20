@@ -17,7 +17,7 @@ from requests import Session
 
 from .errors import AuthkeyError, MissingAuthKey, raise_for_error
 from .pretty import *
-from .utils import USER_AGENT, get_logfile
+from .utils import USER_AGENT, get_datafile
 from .caching import permanent_cache
 
 __all__ = [
@@ -34,7 +34,7 @@ __all__ = [
     "validate_authkey",
 ]
 
-GENSHIN_LOG = get_logfile()
+GENSHIN_LOG = get_datafile()
 GACHA_INFO_URL = "https://hk4e-api-os.hoyoverse.com/event/gacha_info/api/"
 AUTHKEY_FILE = os.path.join(gettempdir(), "genshinstats_authkey.txt")
 
@@ -62,29 +62,37 @@ def _get_short_lang_code(lang: str) -> str:
     return lang if "zh" in lang else lang.split("-")[0]
 
 
-def _read_logfile(logfile: str = None) -> str:
-    """Returns the contents of a logfile"""
-    if GENSHIN_LOG is None:
-        raise FileNotFoundError("No Genshin Installation was found, could not get gacha data.")
-    with open(logfile or GENSHIN_LOG) as file:
-        return file.read()
+def _read_datafile(game_location: str = None) -> str:
+    """Return the contents of a datafile."""
+    datafile = get_datafile(game_location)
+    if datafile is None:
+        raise FileNotFoundError(
+            "No Genshin Installation was found, could not get gacha data. "
+            "Please check if you set correct game location."
+        )
+
+    try:
+        # won't work if genshin is running or script using this function isn't run as administrator
+        return datafile.read_text(errors="replace")
+    except PermissionError as ex:
+        raise PermissionError("Pleas turn off genshin impact or try running script as administrator!") from ex
 
 
 def extract_authkey(string: str) -> Optional[str]:
     """Extracts an authkey from the provided string. Returns None if not found."""
-    match = re.search(r"https://.+?authkey=([^&#]+)", string, re.MULTILINE)
+    match = re.findall(r"https://.+?authkey=([^&#]+)", string, re.MULTILINE)
     if match is not None:
-        return unquote(match.group(1))
+        return unquote(match[-1])
     return None
 
 
-def get_authkey(logfile: str = None) -> str:
+def get_authkey(game_location: str = None) -> str:
     """Gets the query for log requests.
 
     This will either be done from the logs or from a tempfile.
     """
     # first try the log
-    authkey = extract_authkey(_read_logfile(logfile))
+    authkey = extract_authkey(_read_datafile(game_location))
     if authkey is not None:
         with open(AUTHKEY_FILE, "w") as file:
             file.write(authkey)
@@ -118,8 +126,8 @@ def get_banner_ids(logfile: str = None) -> List[str]:
 
     You need to open the details of all banners for this to work.
     """
-    log = _read_logfile(logfile)
-    ids = re.findall(r"OnGetWebViewPageFinish:https://.+?gacha_id=([^&#]+)", log)
+    log = _read_datafile(logfile)
+    ids = re.findall(r"https://.+?gacha_id=([^&#]+)", log, re.MULTILINE)
     return list(set(ids))
 
 

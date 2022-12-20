@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="genshinstats",
-    version="1.4.11.5",
+    version="1.4.12",
     author="nitolar",
     packages=["genshinstats"],
     description="A python library that can get the stats of Genshin Impact players using Hoyoverse's API.",
