@@ -481,6 +481,8 @@ wishes.py           wish history
 ```
 
 # CHANGELOG
+## 1.4.12.1
+- Fixed `get_all_user_data` not working (I accidentally added 's' to variable name 💀)
 ## 1.4.12
 - Fixed `get_authkey` not working
 - Added `get_tcg` which includes unlocked cards and basic info

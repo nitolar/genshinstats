@@ -378,5 +378,5 @@ def get_all_user_data(
     """
     data = get_user_stats(uid, equipment=True, lang=lang, cookie=cookie)
     data["spiral_abyss"] = [get_spiral_abyss(uid, previous, cookie) for previous in [False, True]]
-    data["tcg"] = get_tcg(uid, lang=lang, cookie=cookies)
+    data["tcg"] = get_tcg(uid, lang=lang, cookie=cookie)
     return data
