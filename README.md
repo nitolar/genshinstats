@@ -481,6 +481,8 @@ wishes.py           wish history
 ```
 
 # CHANGELOG
+## 1.4.12.2
+- Added `characters_card_total_num` and `action_card_total_num` to `stats` in `get_tcg`
 ## 1.4.12.1
 - Fixed `get_all_user_data` not working (I accidentally added 's' to variable name 💀)
 ## 1.4.12
