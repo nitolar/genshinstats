@@ -481,6 +481,8 @@ wishes.py           wish history
 ```
 
 # CHANGELOG
+## 1.4.12.4
+- Reverted os salt change (after some testing I'v got a lot of bad request error)
 ## 1.4.12.3
 - Updated os salt
 - Added `parametric_transformer_cooldown` and `parametric_transformer_cooldown_ended` to `prettify_notes`
