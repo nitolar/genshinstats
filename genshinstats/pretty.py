@@ -337,6 +337,8 @@ def prettify_notes(data):
         "realm_currency": data["current_home_coin"],
         "max_realm_currency": data["max_home_coin"],
         "until_realm_currency_limit": data["home_coin_recovery_time"],
+        "parametric_transformer_cooldown": f'Days: {data["transformer"]["recovery_time"]["Day"]}, Hours: {data["transformer"]["recovery_time"]["Hour"]}, Minutes: {data["transformer"]["recovery_time"]["Minute"]}, Seconds: {data["transformer"]["recovery_time"]["Second"]}',
+        "parametric_transformer_cooldown_ended": data["transformer"]["recovery_time"]["reached"],
     }
 
 
