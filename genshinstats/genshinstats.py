@@ -22,6 +22,7 @@ from .pretty import (
     prettify_notes,
     prettify_stats,
     prettyify_tcg,
+    prettyify_tcg_basic,
 )
 from .utils import USER_AGENT, is_chinese, recognize_server, retry
 
@@ -38,6 +39,7 @@ __all__ = [
     "get_notes",
     "get_activities",
     "get_tcg",
+    "get_tcg_basic",
     "get_all_user_data",
 ]
 
@@ -349,6 +351,27 @@ def get_notes(
     )
     return prettify_notes(data)
 
+def get_tcg_basic(
+    uid: int, lang: str = "en-us", cookie: Mapping[str, Any] = None
+) -> Dict[str, Any]:
+    """Gets the cards for Genius Invokation TCG that user UNLOCKED and basic user stats
+    
+    For every card contains basic info like id, name, description, image, wiki page and card proficiency.
+    
+    For characters contains info like hp, element, weapon and skills.
+    
+    For summons and events contains info about cost.
+    """
+    server = recognize_server(uid)
+    data = fetch_game_record_endpoint(
+        "genshin/api/gcg/basicInfo",
+        chinese=is_chinese(uid),
+        cookie=cookie,
+        params=dict(server=server, role_id=uid),
+        headers={"x-rpc-language": lang},
+    )
+    return prettyify_tcg_basic(data)
+
 def get_tcg(
     uid: int, lang: str = "en-us", cookie: Mapping[str, Any] = None, characters: bool = True, action: bool = True
 ) -> Dict[str, Any]:
@@ -371,7 +394,7 @@ def get_tcg(
     return prettyify_tcg(data)
 
 def get_all_user_data(
-    uid: int, lang: str = "en-us", cookie: Mapping[str, Any] = None
+    uid: int, lang: str = "en-us", tcg_basic = True, cookie: Mapping[str, Any] = None
 ) -> Dict[str, Any]:
     """Fetches all data a user can has. Very slow.
 
@@ -380,5 +403,8 @@ def get_all_user_data(
     """
     data = get_user_stats(uid, equipment=True, lang=lang, cookie=cookie)
     data["spiral_abyss"] = [get_spiral_abyss(uid, previous, cookie) for previous in [False, True]]
-    data["tcg"] = get_tcg(uid, lang=lang, cookie=cookie)
+    if tcg_basic == True:
+        data["tcg"] = get_tcg_basic(uid, lang=lang, cookie=cookie)
+    else:
+        data["tcg"] = get_tcg(uid, lang=lang, cookie=cookie)
     return data

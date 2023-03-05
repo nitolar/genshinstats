@@ -571,3 +571,15 @@ def prettyify_tcg(data):
             } for events in event if events['num'] > 0
         ]
     }
+    
+def prettyify_tcg_basic(data):
+    stats = data
+    return {
+        "stats": {
+                "level": stats['level'],
+                "characters_unlocked": stats['avatar_card_num_gained'],
+                "characters_card_total_num": stats['avatar_card_num_total'],
+                "actions_unlocked": stats['action_card_num_gained'],
+                "action_card_total_num": stats['action_card_num_total']
+            },
+    }
