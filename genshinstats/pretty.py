@@ -574,6 +574,7 @@ def prettyify_tcg(data):
     
 def prettyify_tcg_basic(data):
     stats = data
+    replays = data['replays']
     return {
         "stats": {
                 "level": stats['level'],
@@ -582,4 +583,24 @@ def prettyify_tcg_basic(data):
                 "actions_unlocked": stats['action_card_num_gained'],
                 "action_card_total_num": stats['action_card_num_total']
             },
+        "replays": [
+            {
+                "id": replay['game_id'],
+                "player": {
+                    "nick": replay['self']['name'],
+                    "cards": [
+                        i for i in replay['self']['linups']
+                    ]
+                },
+                "opponent": {
+                    "nick": replay['opposite']['name'],
+                    "cards": [
+                        i for i in replay['opposite']['linups']
+                    ]
+                },
+                "match_type": replay['match_type'],
+                "match_time": f"{replay['match_time']['day']}.{replay['match_time']['month']}.{replay['match_time']['year']} {replay['match_time']['hour']}:{replay['match_time']['minute']}:{replay['match_time']['second']}",
+                "won": replay['is_win']
+            } for replay in replays
+        ],
     }

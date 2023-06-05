@@ -481,6 +481,8 @@ wishes.py           wish history
 ```
 
 # CHANGELOG
+## 1.4.12.6
+- Added 2 last replays in to the data from `get_tcg_basic`
 ## 1.4.12.5
 - Added `get_tcg_basic` to access the `basicInfo` endpoint because `cardList` endpoint only works on loged in users NO CARD LIST 😭
 - Added a new parameter `tcg_basic` to `get_all_user_data` witch is TRUE by default so that means that it uses `get_tcg_basic` instead of `get_tcg`, but changing it to FALSE will make you use `get_tcg`

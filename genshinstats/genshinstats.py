@@ -354,13 +354,9 @@ def get_notes(
 def get_tcg_basic(
     uid: int, lang: str = "en-us", cookie: Mapping[str, Any] = None
 ) -> Dict[str, Any]:
-    """Gets the cards for Genius Invokation TCG that user UNLOCKED and basic user stats
+    """Gets basic user stats and 2 last replays
     
-    For every card contains basic info like id, name, description, image, wiki page and card proficiency.
-    
-    For characters contains info like hp, element, weapon and skills.
-    
-    For summons and events contains info about cost.
+    Arena of Champions for now not supported.
     """
     server = recognize_server(uid)
     data = fetch_game_record_endpoint(
@@ -375,7 +371,9 @@ def get_tcg_basic(
 def get_tcg(
     uid: int, lang: str = "en-us", cookie: Mapping[str, Any] = None, characters: bool = True, action: bool = True
 ) -> Dict[str, Any]:
-    """Gets the cards for Genius Invokation TCG that user UNLOCKED and basic user stats
+    """ONLY LOGGED IN USER
+    
+    Gets the cards for Genius Invokation TCG that user UNLOCKED and basic user stats
     
     For every card contains basic info like id, name, description, image, wiki page and card proficiency.
     
