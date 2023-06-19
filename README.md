@@ -481,6 +481,8 @@ wishes.py           wish history
 ```
 
 # CHANGELOG
+## 1.4.12.7
+- Updated daily overseas api url endpoint
 ## 1.4.12.6
 - Added 2 last replays in to the data from `get_tcg_basic`
 ## 1.4.12.5
