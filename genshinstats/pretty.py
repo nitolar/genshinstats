@@ -3,30 +3,9 @@
 Fixes the huge problem of outdated field names in the api,
 that were leftover from during development
 """
-import re, json
+import re, json, requests
 from datetime import datetime
 
-character_icons = {
-    "PlayerGirl": "Traveler",
-    "PlayerBoy": "Traveler",
-    "Ambor": "Amber",
-    "Qin": "Jean",
-    "Hutao": "Hu Tao",
-    "Feiyan": "Yanfei",
-    "Kazuha": "Kadehara Kazuha",
-    "Sara": "Kujou Sara",
-    "Shougun": "Raiden Shogun",
-    "Tohma": "Thoma",
-    "Heizo": "Shikanoin Heizou",
-    "Shinobu": "Kuki Shinobu",
-    "Yunjin": "Yun Jin",
-    "Itto": "Arataki Itto",
-    "Ayaka": "Kamisato Ayaka",
-    "Ayato": "Kamisato Ayato",
-    "Kokomi": "Sangonomiya Kokomi",
-    "Yae": "Yae Miko",
-    "Noel": "Noelle"
-}
 
 elements = {
     "Wind": "Anemo",
@@ -39,14 +18,10 @@ elements = {
 }
 
 
-def _recognize_character_icon(url: str) -> str:
-    """Recognizes a character's icon url and returns its name."""
-    exp = r"game_record/genshin/character_.*_(\w+)(?:@\dx)?.png"
-    match = re.search(exp, url)
-    if match is None:
-        raise ValueError(f"{url!r} is not a character icon or image url")
-    character = match.group(1)
-    return character_icons.get(character) or character
+def _recognize_character_id(id: int) -> str:
+    """Recognizes a character's id and returns its name."""
+    ambr_top = requests.get('https://api.ambr.top/v2/en/avatar').json()
+    return ambr_top['data']['items'][f'{id}']['name']
 
 
 def prettify_stats(data):
@@ -173,7 +148,7 @@ def prettify_characters(data):
                             }
                             for e in a["set"]["affixes"]
                         ],
-                        "set_id": int(re.search(r"UI_RelicIcon_(\d+)_\d+", a["icon"]).group(1)),  # type: ignore
+                        #"set_id": int(re.search(r"UI_RelicIcon_(\d+)_\d+", a["icon"]).group(1)),  # type: ignore
                         "id": a["set"]["id"],
                     },
                     "icon": a["icon"],
@@ -204,7 +179,7 @@ def prettify_abyss(data):
     fchars = lambda d: [
         {
             "value": a["value"],
-            "name": _recognize_character_icon(a["avatar_icon"]),
+            "name": _recognize_character_id(a["avatar_id"]),
             "rarity": a["rarity"] if a["rarity"] < 100 else a["rarity"] - 100,  # aloy has 105 stars
             "icon": a["avatar_icon"],
             "id": a["avatar_id"],
@@ -249,7 +224,7 @@ def prettify_abyss(data):
                                 "timestamp": totime(b["timestamp"]),
                                 "characters": [
                                     {
-                                        "name": _recognize_character_icon(c["icon"]),
+                                        "name": _recognize_character_id(c["id"]),
                                         "rarity": c["rarity"]
                                         if c["rarity"] < 100
                                         else c["rarity"] - 100,  # aloy has 105 stars
@@ -290,7 +265,7 @@ def prettify_activities(data):
                     {
                         "characters": [
                             {
-                                "name": _recognize_character_icon(c["icon"]),
+                                "name": _recognize_character_id(c["id"]),
                                 "rarity": c["rarity"]
                                 if c["rarity"] < 100
                                 else c["rarity"] - 100,  # aloy has 105 stars
