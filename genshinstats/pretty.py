@@ -44,6 +44,7 @@ def prettify_stats(data):
             "geoculi": s["geoculus_number"],
             "electroculi": s["electroculus_number"],
             "dendroculus": s["dendroculus_number"],
+            "hydroculus": s["hydroculus_number"],
             "common_chests": s["common_chest_number"],
             "exquisite_chests": s["exquisite_chest_number"],
             "precious_chests": s["precious_chest_number"],

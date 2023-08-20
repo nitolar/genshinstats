@@ -481,6 +481,8 @@ wishes.py           wish history
 ```
 
 # CHANGELOG
+## 1.8.12.9
+- Added `hydroculus` to `stats` in `prettify_stats` 
 ## 1.4.12.8
 - Removed `set_id` from `artifacts` in `prettify_characters` because method to get it was depended on the url of the image witch now changed
 - Updated the way in witch character names were recognized in `prettify_abyss` and `prettify_activities` because previous way was depended on the url of the image witch now changed
