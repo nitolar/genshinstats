@@ -484,8 +484,8 @@ wishes.py           wish history
 ## 1.4.12.9
 - Added `hydroculus` to `stats` in `prettify_stats` 
 ## 1.4.12.8
-- Removed `set_id` from `artifacts` in `prettify_characters` because method to get it was depended on the url of the image witch now changed
-- Updated the way in witch character names were recognized in `prettify_abyss` and `prettify_activities` because previous way was depended on the url of the image witch now changed
+- Removed `set_id` from `artifacts` in `prettify_characters` because method to get it was depended on the url of the image which now changed
+- Updated the way in which character names were recognized in `prettify_abyss` and `prettify_activities` because previous way was depended on the url of the image which now changed
 - Renamed `_recognize_character_icon` to `_recognize_character_id` and now uses ambr.top api to recognize characters id and return its name insted of character image url
 ## 1.4.12.7
 - Updated daily overseas api url endpoint
